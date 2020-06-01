@@ -2,49 +2,43 @@ import { Resource } from "./resource";
 import { Y18N } from "y18n";
 
 export class Tile {
-  private static base = 5;
+  private halfBase = Math.floor(this.base / 2);
 
   constructor(
     private y18n: Y18N,
     private x: number,
     private y: number,
-    public res?: Resource
+    public res?: Resource,
+    private base = 6
   ) {}
 
-  display(buffer: string[][]) {
-    const { xMin, yMin, xMax, yMax } = this.getBoundingBox();
+  draw(drawString: (x: number, y: number, c: string) => void) {
+    const { xMin, yMin, yMax } = this.getBoundingBox();
 
-    buffer[yMin + 2][xMin] = '+';
-    buffer[yMin + 1][xMin + 1] = '/';
-    buffer[yMax - 1][xMin + 1] = '\\';
-    buffer[yMin][xMin + 2] = '+';
-    buffer[yMax][xMin + 2] = '+';
-    for (let x = xMin + 3; x < xMax - 2; x++) {
-      buffer[yMin][x] = '-';
-      buffer[yMax][x] = '-';
+    const horizontalSide = '+' + '-'.repeat(this.base - 1) + '+';
+    drawString(xMin + this.halfBase, yMin, horizontalSide);
+    drawString(xMin + this.halfBase, yMax, horizontalSide);
+    
+    for (let offset = 1; offset < this.halfBase; offset++) {
+      const spaces = ' '.repeat(this.base - 1 + 2 * offset);
+      drawString(xMin + this.halfBase - offset, yMin + offset, '/' + spaces + '\\');
+      drawString(xMin + this.halfBase - offset, yMax - offset, '\\' + spaces + '/');
     }
-    buffer[yMin][xMax - 2] = '+';
-    buffer[yMax][xMax - 2] = '+';
-    buffer[yMin + 1][xMax - 1] = '\\';
-    buffer[yMax - 1][xMax - 1] = '/';
-    buffer[yMin + 2][xMax] = '+';
-
-    if (this.res) {
-      let resName = this.y18n.__(this.res);
-      if (resName.length > Tile.base + 1) resName = resName.substr(0, Tile.base) + '.';
-      const spaces = (Tile.base + 3 - resName.length) / 2
-      buffer[yMin + 2].splice(xMin + 1 + spaces, resName.length, ...resName.split(''))
-    }
+    
+    let resName = this.res ? this.y18n.__(this.res) : '';
+    if (resName.length > this.base + 1) resName = resName.substring(0, this.base) + '.';
+    const spaceCount = (2 * this.halfBase + this.base - 1 - resName.length) / 2;
+    drawString(xMin, yMin + this.halfBase, '+' + ' '.repeat(Math.floor(spaceCount)) + resName + ' '.repeat(Math.ceil(spaceCount)) + '+');
   }
 
   getBoundingBox() {
-    const xMin = (2 + Tile.base) * this.x;
-    const yMin = 2 * this.y;
+    const xMin = (this.halfBase + this.base) * this.x;
+    const yMin = this.halfBase * this.y;
     return {
       xMin,
       yMin,
-      xMax: xMin + 2 + Tile.base + 2,
-      yMax: yMin + 4,
+      xMax: xMin + this.halfBase * 2 + this.base,
+      yMax: yMin + this.halfBase * 2,
     }
   }
 
