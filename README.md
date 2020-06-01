@@ -1,7 +1,7 @@
 # cmmk
 [Catan](https://www.catan.com/board-games) map maker.
 
-`cmmk` generates random maps for the Catan board game (with 5-6 players extension),
+`cmmk` generates random maps for the [Catan board game](https://www.catan.com/board-games) (with 5-6 players extension),
 preventing 2 adjacent tiles to produce the same resource.
 
 ## Installation
@@ -16,28 +16,27 @@ sudo npm install -g
 $ cmmk
                        +----+
                       /      \
-                +----+  Bois  +----+
+                +----+ Grain  +----+
                /      \      /      \
-         +----+ Pierre +----+ Pierre +----+
+         +----+ Lumber +----+ Lumber +----+
         /      \      /      \      /      \
-  +----+ Mouton +----+ Argile +----+ Mouton +----+
+  +----+  Wool  +----+  Ore   +----+  Ore   +----+
  /      \      /      \      /      \      /      \
-+  Ble   +----+  Ble   +----+  Ble   +----+  Ble   +
++ Brick  +----+ Brick  +----+ Brick  +----+ Grain  +
  \      /      \      /      \      /      \      /
-  +----+  Bois  +----+  Bois  +----+  Bois  +----+
+  +----+ Grain  +----+  Wool  +----+  Wool  +----+
  /      \      /      \      /      \      /      \
-+ Argile +----+ Mouton +----+ Mouton +----+ Pierre +
++  Ore   +----+ Lumber +----+ Lumber +----+ Lumber +
  \      /      \      /      \      /      \      /
-  +----+ Pierre +----+ Pierre +----+ Argile +----+
+  +----+ Desert +----+ Grain  +----+ Brick  +----+
  /      \      /      \      /      \      /      \
-+  Bois  +----+ Argile +----+  Bois  +----+ Mouton +
++  Wool  +----+  Wool  +----+  Ore   +----+ Desert +
  \      /      \      /      \      /      \      /
-  +----+ Désert +----+ Désert +----+  Ble   +----+
+  +----+ Grain  +----+ Brick  +----+  Wool  +----+
         \      /      \      /      \      /
-         +----+ Mouton +----+ Argile +----+
+         +----+  Ore   +----+ Lumber +----+
                \      /      \      /
-                +----+  Ble   +----+
+                +----+ Grain  +----+
                       \      /
                        +----+
-2
 ```

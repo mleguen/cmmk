@@ -1,6 +1,6 @@
 {
   "name": "cmmk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Catan map maker",
   "bin": "build/cmmk.js",
   "main": "build/cmmk.js",
@@ -13,9 +13,12 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "core-js": "^3.6.5",
-    "typescript": "^3.9.3"
+    "i18n": "^0.10.0",
+    "typescript": "^3.9.3",
+    "y18n": "^4.0.0"
   },
   "devDependencies": {
+    "@types/i18n": "^0.8.6",
     "@types/node": "^14.0.5"
   },
   "repository": {

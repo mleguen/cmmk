@@ -1,14 +1,17 @@
 #!/usr/bin/env node
-import { genereCartesAleatoires } from './generation';
-import { evalueCarte } from './evaluation';
-import { Carte } from './carte';
+import { Board } from './board';
+import { resolve } from 'path';
+import y18nFactory = require('y18n');
 
-let carte: Carte;
-let note: number;
+const y18n = y18nFactory({
+  directory: resolve(__dirname, '..', 'locales'),
+  locale: process.env.LANG ? process.env.LANG.split('.')[0] : 'en_US'
+});
+
+let board: Board;
 do {
-  [{carte, note}] = genereCartesAleatoires({nbCartes: 1, nbPermutations: 100})
-  .map(evalueCarte);
-} while(note < 2);
+  board = new Board(y18n);
+  board.shuffle(100);
+} while(board.hasAdjacentTilesProducingSameResource());
 
-carte.affiche();
-console.log(note)
+board.toStrings().forEach(line => console.log(line));
