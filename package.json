@@ -1,0 +1,38 @@
+{
+  "name": "cmmk",
+  "version": "1.0.0",
+  "description": "Catan map maker",
+  "bin": "build/cmmk.js",
+  "main": "build/cmmk.js",
+  "scripts": {
+    "compile": "tsc",
+    "postinstall": "npm run compile",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mael Le Guen",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "typescript": "^3.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mleguen/cmmk.git"
+  },
+  "keywords": [
+    "katan",
+    "catan",
+    "catane",
+    "map",
+    "carte",
+    "generator",
+    "générateur"
+  ],
+  "bugs": {
+    "url": "https://github.com/mleguen/cmmk/issues"
+  },
+  "homepage": "https://github.com/mleguen/cmmk#readme"
+}
