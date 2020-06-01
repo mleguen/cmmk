@@ -4,5 +4,8 @@
   "Wool": "Laine",
   "Brick": "Brique",
   "Grain": "Blé",
-  "Desert": "Désert"
+  "Desert": "Désert",
+  "Tile size": "Taille des tuiles",
+  "Map maker for the Catan board game.": "Générateur de plateau pour le jeu de plateau 'Les colons de Catane'.",
+  "5-6 players board": "Plateau pour 5-6 joueurs"
 }

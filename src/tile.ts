@@ -6,7 +6,7 @@ export class Tile {
   private halfSize: number;
 
   constructor(
-    private y18n: Y18N,
+    private __: (toTranslate: string) => string,
     private x: number,
     private y: number,
     public res?: Resource,
@@ -31,7 +31,7 @@ export class Tile {
       drawString(xMin + this.halfSize - offset, yMin + offset, '\\' + spaces + '/');
     }
     
-    let resName = this.res ? this.y18n.__(this.res) : '';
+    let resName = this.res ? this.__(this.res) : '';
     if (resName.length > this.size + 1) resName = resName.substring(0, this.size) + '.';
     const spaceCount = (2 * this.halfSize + this.size - 1 - resName.length) / 2;
     drawString(xMin, yMin + this.halfSize, '+' + ' '.repeat(Math.floor(spaceCount)) + resName + ' '.repeat(Math.ceil(spaceCount)) + '+');

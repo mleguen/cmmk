@@ -1,20 +1,19 @@
 import { Tile } from "./tile";
 import { Resource } from "./resource";
-import { Y18N } from "y18n";
 
 export class Board {
   private tiles: Tile[];
   
   constructor(
-    y18n: Y18N,
     {
+      __ = (toTranslate: string) => toTranslate,
       for56Players = false,
       tileSize = 6
     } = {}
   ) {
     const tileOptions = { size: tileSize };
     function tileFactory(x: number, y: number, res: Resource): Tile {
-      return new Tile(y18n, x, y, res, tileOptions);
+      return new Tile(__, x, y, res, tileOptions);
     }
     this.tiles = [
       tileFactory(0, 0, Resource.Desert),
