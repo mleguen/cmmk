@@ -1,7 +1,7 @@
 # cmmk
 [Catan](https://www.catan.com/board-games) map maker.
 
-`cmmk` generates random maps for the [Catan board game](https://www.catan.com/board-games) (with 5-6 players extension),
+`cmmk` generates random maps for the [Catan board game](https://www.catan.com/board-games),
 preventing 2 adjacent tiles to produce the same resource.
 
 ## Installation

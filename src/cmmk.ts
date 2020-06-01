@@ -14,4 +14,4 @@ do {
   board.shuffle(100);
 } while(board.hasAdjacentTilesProducingSameResource());
 
-board.toStrings().forEach(line => console.log(line));
+board.toStrings().reverse().forEach(line => console.log(line));

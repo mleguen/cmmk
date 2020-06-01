@@ -3,40 +3,56 @@ import { Resource } from "./resource";
 import { Y18N } from "y18n";
 
 export class Board {
-  private tiles: Tile[] = [
-    new Tile(this.y18n,  0,  1, Resource.Desert),
-    new Tile(this.y18n,  1,  0, Resource.Desert),
-    new Tile(this.y18n,  0, -1, Resource.Lumber),
-    new Tile(this.y18n, -1,  0, Resource.Lumber),
-    new Tile(this.y18n, -1,  2, Resource.Lumber),
-    new Tile(this.y18n,  0,  3, Resource.Lumber),
-    new Tile(this.y18n,  1,  2, Resource.Lumber),
-    new Tile(this.y18n,  2,  1, Resource.Lumber),
-    new Tile(this.y18n,  2, -1, Resource.Brick),
-    new Tile(this.y18n,  1, -2, Resource.Brick),
-    new Tile(this.y18n,  0, -3, Resource.Brick),
-    new Tile(this.y18n, -1, -2, Resource.Brick),
-    new Tile(this.y18n, -2, -1, Resource.Brick),
-    new Tile(this.y18n, -2,  1, Resource.Wool),
-    new Tile(this.y18n, -2,  3, Resource.Wool),
-    new Tile(this.y18n, -1,  4, Resource.Wool),
-    new Tile(this.y18n,  0,  5, Resource.Wool),
-    new Tile(this.y18n,  1,  4, Resource.Wool),
-    new Tile(this.y18n,  2,  3, Resource.Wool),
-    new Tile(this.y18n,  3,  2, Resource.Grain),
-    new Tile(this.y18n,  3,  0, Resource.Grain),
-    new Tile(this.y18n,  3, -2, Resource.Grain),
-    new Tile(this.y18n,  2, -3, Resource.Grain),
-    new Tile(this.y18n,  1, -4, Resource.Grain),
-    new Tile(this.y18n,  0, -5, Resource.Grain),
-    new Tile(this.y18n, -1, -4, Resource.Ore),
-    new Tile(this.y18n, -2, -3, Resource.Ore),
-    new Tile(this.y18n, -3, -2, Resource.Ore),
-    new Tile(this.y18n, -3,  0, Resource.Ore),
-    new Tile(this.y18n, -3,  2, Resource.Ore),
-  ];
+  private tiles: Tile[];
   
-  constructor(private y18n: Y18N) {}
+  constructor(
+    y18n: Y18N,
+    {
+      for56Players = false,
+      tileSize = 6
+    } = {}
+  ) {
+    const tileOptions = { size: tileSize };
+    function tileFactory(x: number, y: number, res: Resource): Tile {
+      return new Tile(y18n, x, y, res, tileOptions);
+    }
+    this.tiles = [
+      tileFactory(0, 0, Resource.Desert),
+      tileFactory(1, -1, Resource.Lumber),
+      tileFactory(0, -2, Resource.Lumber),
+      tileFactory(-1, -1, Resource.Lumber),
+      tileFactory(-1, 1, Resource.Lumber),
+      tileFactory(0, 2, Resource.Brick),
+      tileFactory(1, 1, Resource.Brick),
+      tileFactory(2, 0, Resource.Brick),
+      tileFactory(2, -2, Resource.Wool),
+      tileFactory(1, -3, Resource.Wool),
+      tileFactory(0, -4, Resource.Wool),
+      tileFactory(-1, -3, Resource.Wool),
+      tileFactory(-2, -2, Resource.Grain),
+      tileFactory(-2, 0, Resource.Grain),
+      tileFactory(-2, 2, Resource.Grain),
+      tileFactory(-1, 3, Resource.Grain),
+      tileFactory(0, 4, Resource.Ore),
+      tileFactory(1, 3, Resource.Ore),
+      tileFactory(2, 2, Resource.Ore),
+    ];
+    if (for56Players) {
+      this.tiles = this.tiles.concat([
+        tileFactory(3, 1, Resource.Desert),
+        tileFactory(3, -1, Resource.Lumber),
+        tileFactory(3, -3, Resource.Lumber),
+        tileFactory(2, -4, Resource.Brick),
+        tileFactory(1, -5, Resource.Brick),
+        tileFactory(0, -6, Resource.Wool),
+        tileFactory(-1, -5, Resource.Wool),
+        tileFactory(-2, -4, Resource.Grain),
+        tileFactory(-3, -3, Resource.Grain),
+        tileFactory(-3, -1, Resource.Ore),
+        tileFactory(-3, 1, Resource.Ore),
+      ]);
+    }
+  }
 
   private getBoundinBox() {
     let xMin = Infinity, yMin = Infinity, xMax = -Infinity, yMax = -Infinity;
