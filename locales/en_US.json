@@ -7,5 +7,6 @@
   "Lumber": "Lumber",
   "Map maker for the Catan board game.": "Map maker for the Catan board game.",
   "5-6 players board": "5-6 players board",
-  "Tile size": "Tile size"
+  "Tile size": "Tile size",
+  "Retries count (only the most balanced map will be kept)": "Retries count (only the most balanced map will be kept)"
 }

@@ -24,8 +24,18 @@ export class BoardDrawer {
         lines[y - bBox.yMin] = lines[y - bBox.yMin].slice(0, x - bBox.xMin) + s + lines[y - bBox.yMin].slice( x - bBox.xMin + s.length);
       })
     );
-
-    lines.reverse().forEach(line => this.console.log(line.trimRight()));
+    
+    const resProba = Object.entries(board.getResourceProba())
+    .map<[string, number]>(([res, proba]) => [this.__(res), proba])
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([res, proba]) => ` ${Math.round(proba * 100)}% ${res}`);
+    
+    lines.reverse().forEach((line, index) => {
+      this.console.log(index >= lines.length - resProba.length
+        ? line + resProba[index - lines.length + resProba.length]
+        : line.trimRight()
+      );
+    });
   }
 
   private drawTile(tile: Tile, drawString: (x: number, y: number, c: string) => void) {

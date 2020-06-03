@@ -1,48 +1,81 @@
 import { Tile } from "./tile";
 import { Resource } from "./resource";
 
+const DICE_PROBA = {
+  2: 1 / 36,
+  3: 2 / 36,
+  4: 3 / 36,
+  5: 4 / 36,
+  6: 5 / 36,
+  8: 5 / 36,
+  9: 4 / 36,
+  10: 3 / 36,
+  11: 2 / 36,
+  12: 1 / 36,
+};
+
+const NUMBER_TOKENS = (for56Players: boolean) => for56Players
+  ? [2, 5, 4, 6, 3, 9, 8, 11, 11, 10, 6, 3, 8, 4, 8, 10, 11, 12, 10, 5, 4, 9, 5, 9, 12, 3, 2, 6]
+  : [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11];
+
+const TILES = (for56Players: boolean) => [
+  { x: 0, y: 0, res: Resource.Desert },
+  { x: 1, y: -1, res: Resource.Lumber },
+  { x: 0, y: -2, res: Resource.Lumber },
+  { x: -1, y: -1, res: Resource.Lumber },
+  { x: -1, y: 1, res: Resource.Lumber },
+  { x: 0, y: 2, res: Resource.Brick },
+  { x: 1, y: 1, res: Resource.Brick },
+  { x: 2, y: 0, res: Resource.Brick },
+  { x: 2, y: -2, res: Resource.Wool },
+  { x: 1, y: -3, res: Resource.Wool },
+  { x: 0, y: -4, res: Resource.Wool },
+  { x: -1, y: -3, res: Resource.Wool },
+  { x: -2, y: -2, res: Resource.Grain },
+  { x: -2, y: 0, res: Resource.Grain },
+  { x: -2, y: 2, res: Resource.Grain },
+  { x: -1, y: 3, res: Resource.Grain },
+  { x: 0, y: 4, res: Resource.Ore },
+  { x: 1, y: 3, res: Resource.Ore },
+  { x: 2, y: 2, res: Resource.Ore },
+].concat(for56Players
+  ? [
+    { x: 3, y: 1, res: Resource.Desert },
+    { x: 3, y: -1, res: Resource.Lumber },
+    { x: 3, y: -3, res: Resource.Lumber },
+    { x: 2, y: -4, res: Resource.Brick },
+    { x: 1, y: -5, res: Resource.Brick },
+    { x: 0, y: -6, res: Resource.Wool },
+    { x: -1, y: -5, res: Resource.Wool },
+    { x: -2, y: -4, res: Resource.Grain },
+    { x: -3, y: -3, res: Resource.Grain },
+    { x: -3, y: -1, res: Resource.Ore },
+    { x: -3, y: 1, res: Resource.Ore },
+  ]
+  : []
+);
+
 export class Board {
   public tiles: Tile[];
+  private proba: number[];
   
   constructor(
     for56Players = false,
   ) {
-    this.tiles = [
-      new Tile(0, 0, Resource.Desert),
-      new Tile(1, -1, Resource.Lumber),
-      new Tile(0, -2, Resource.Lumber),
-      new Tile(-1, -1, Resource.Lumber),
-      new Tile(-1, 1, Resource.Lumber),
-      new Tile(0, 2, Resource.Brick),
-      new Tile(1, 1, Resource.Brick),
-      new Tile(2, 0, Resource.Brick),
-      new Tile(2, -2, Resource.Wool),
-      new Tile(1, -3, Resource.Wool),
-      new Tile(0, -4, Resource.Wool),
-      new Tile(-1, -3, Resource.Wool),
-      new Tile(-2, -2, Resource.Grain),
-      new Tile(-2, 0, Resource.Grain),
-      new Tile(-2, 2, Resource.Grain),
-      new Tile(-1, 3, Resource.Grain),
-      new Tile(0, 4, Resource.Ore),
-      new Tile(1, 3, Resource.Ore),
-      new Tile(2, 2, Resource.Ore),
-    ];
-    if (for56Players) {
-      this.tiles = this.tiles.concat([
-        new Tile(3, 1, Resource.Desert),
-        new Tile(3, -1, Resource.Lumber),
-        new Tile(3, -3, Resource.Lumber),
-        new Tile(2, -4, Resource.Brick),
-        new Tile(1, -5, Resource.Brick),
-        new Tile(0, -6, Resource.Wool),
-        new Tile(-1, -5, Resource.Wool),
-        new Tile(-2, -4, Resource.Grain),
-        new Tile(-3, -3, Resource.Grain),
-        new Tile(-3, -1, Resource.Ore),
-        new Tile(-3, 1, Resource.Ore),
-      ]);
-    }
+    this.tiles = TILES(for56Players).map(({x, y, res}) => new Tile(x, y, res));
+    this.proba = NUMBER_TOKENS(for56Players).map(numberToken => DICE_PROBA[numberToken]);
+  }
+
+  getResourceProba() {
+    let deserts = 0;
+    return this.tiles.reduce<{ [res in Resource]?: number }>((resProba, tile, index) => {
+      if (tile.res === Resource.Desert) {
+        deserts++;
+      } else {
+        resProba[tile.res] = (resProba[tile.res] || 0) + this.proba[index - deserts];
+      }
+      return resProba;
+    }, {});
   }
 
   hasAdjacentTilesProducingSameResource() {
