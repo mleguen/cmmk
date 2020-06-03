@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-import { Board } from './board';
+import { Board } from '../lib';
 import { resolve } from 'path';
 import yargs = require('yargs/yargs');
 import y18n = require('y18n');
+import { BoardDrawer } from './board-drawer';
 
 const { __ } = y18n({
-  directory: resolve(__dirname, '..', 'locales'),
+  directory: resolve(__dirname, '..', '..', 'locales'),
   locale: process.env.LANG ? process.env.LANG.split('.')[0] : 'en_US'
 });
 
@@ -31,11 +32,12 @@ yargs(process.argv.slice(2))
   ({ big, tileSize }) => {
     let board: Board;
     do {
-      board = new Board({ __, for56Players: big, tileSize });
+      board = new Board(big);
       board.shuffle(100);
     } while (board.hasAdjacentTilesProducingSameResource());
 
-    board.toStrings().reverse().forEach(line => console.log(line));
+    const bd = new BoardDrawer(__, tileSize, console);
+    bd.drawBoard(board);
   }
 )
 .parse();

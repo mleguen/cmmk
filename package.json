@@ -2,8 +2,8 @@
   "name": "cmmk",
   "version": "1.2.0",
   "description": "Catan map maker",
-  "bin": "build/cmmk.js",
-  "main": "build/cmmk.js",
+  "bin": "build/bin/cmmk.js",
+  "main": "build/lib/index.js",
   "scripts": {
     "compile": "tsc",
     "postinstall": "npm run compile",
