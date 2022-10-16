@@ -29,7 +29,7 @@ yargs(process.argv.slice(2))
       default: 6,
     })
     .positional('retries', {
-      description: __('Retries count (only the most equilibrated map will be kept)'),
+      description: __('Retries count (only the most balanced map will be kept)'),
       type: 'number',
       default: 1,
     });
