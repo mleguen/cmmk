@@ -1,4 +1,4 @@
-import { Board, Tile } from "../lib";
+import { Board, BoardTile, Tile } from "../lib";
 
 export interface Translator {
   (toTranslate: string): string
@@ -19,8 +19,8 @@ export class BoardDrawer {
     const bBox = this.getBoardBoundingBox(board);
 
     const lines = new Array(bBox.yMax - bBox.yMin + 1).fill(undefined).map(() => ' '.repeat(bBox.xMax - bBox.xMin + 1));
-    board.tiles.forEach(tile =>
-      this.drawTile(tile, (x: number, y: number, s: string) => {
+    board.getTiles().forEach(tile =>
+      this.drawBoardTile(tile, (x: number, y: number, s: string) => {
         lines[y - bBox.yMin] = lines[y - bBox.yMin].slice(0, x - bBox.xMin) + s + lines[y - bBox.yMin].slice( x - bBox.xMin + s.length);
       })
     );
@@ -38,23 +38,41 @@ export class BoardDrawer {
     });
   }
 
-  private drawTile(tile: Tile, drawString: (x: number, y: number, c: string) => void) {
-    const { xMin, yMin, yMax } = this.getTileBoundingBox(tile);
+  private drawBoardTile(boardTile: BoardTile, drawString: (x: number, y: number, c: string) => void) {
+    const { xMin, yMin, yMax } = this.getTileBoundingBox(boardTile.tile);
 
+    // Draw top & bottom (horizontal) sides
     const horizontalSide = '+' + '-'.repeat(this.tileSize - 1) + '+';
     drawString(xMin + this.halfTileSize, yMin, horizontalSide);
     drawString(xMin + this.halfTileSize, yMax, horizontalSide);
 
-    for (let offset = 1; offset < this.halfTileSize; offset++) {
+    // Draw left & right sides
+    for (let offset = 1; offset < this.halfTileSize - 1; offset++) {
       const spaces = ' '.repeat(this.tileSize - 1 + 2 * offset);
       drawString(xMin + this.halfTileSize - offset, yMax - offset, '/' + spaces + '\\');
       drawString(xMin + this.halfTileSize - offset, yMin + offset, '\\' + spaces + '/');
     }
 
-    let resName = tile.res ? this.__(tile.res) : '';
+    const drawCenteredString = (first: string, s: string, last: string, offset: number = 0) => {
+      const absOffset = Math.abs(offset);
+      const spaceCount = (2 * this.halfTileSize + this.tileSize - 1 - s.length) / 2 - absOffset;
+      drawString(
+        xMin + absOffset,
+        yMin + this.halfTileSize + offset,
+        first + ' '.repeat(Math.floor(spaceCount)) + s + ' '.repeat(Math.ceil(spaceCount)) + last
+      );
+    }
+
+    // Draw the lines below & after the center, with number token & probability
+    if (this.halfTileSize >= 2) {
+      drawCenteredString('/', boardTile.numberToken ? '(' + boardTile.numberToken + ')' : '', '\\', 1);
+      drawCenteredString('\\', Math.round(boardTile.proba*100) + '%', '/', -1);
+    }
+
+    // Draw the middle of the tile, with resource name
+    let resName = boardTile.tile.res ? this.__(boardTile.tile.res) : '';
     if (resName.length > this.tileSize + 1) resName = resName.substring(0, this.tileSize) + '.';
-    const spaceCount = (2 * this.halfTileSize + this.tileSize - 1 - resName.length) / 2;
-    drawString(xMin, yMin + this.halfTileSize, '+' + ' '.repeat(Math.floor(spaceCount)) + resName + ' '.repeat(Math.ceil(spaceCount)) + '+');
+    drawCenteredString('+', resName, '+');
   }
 
   private getBoardBoundingBox(board: Board) {

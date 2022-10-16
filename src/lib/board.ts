@@ -7,6 +7,7 @@ const DICE_PROBA = {
   4: 3 / 36,
   5: 4 / 36,
   6: 5 / 36,
+  7: 6 / 36,
   8: 5 / 36,
   9: 4 / 36,
   10: 3 / 36,
@@ -55,17 +56,26 @@ const TILES = (for56Players: boolean) => [
   : []
 );
 
+export interface BoardTile {
+  tile: Tile,
+  numberToken?: number,
+  proba: number,
+};
+
 export class Board {
   public tiles: Tile[];
   private proba: number[];
+  private numberTokens: number[];
   
   constructor(
     for56Players = false,
   ) {
     this.tiles = TILES(for56Players).map(({x, y, res}) => new Tile(x, y, res));
-    this.proba = NUMBER_TOKENS(for56Players).map(numberToken => DICE_PROBA[numberToken]);
+    this.numberTokens = NUMBER_TOKENS(for56Players);
+    this.proba = this.numberTokens.map(numberToken => DICE_PROBA[numberToken]);
   }
 
+  /** Compute the probability for each resource to be produced in the current state of the board */
   getResourceProba() {
     let deserts = 0;
     return this.tiles.reduce<{ [res in Resource]?: number }>((resProba, tile, index) => {
@@ -76,6 +86,26 @@ export class Board {
       }
       return resProba;
     }, {});
+  }
+
+  getTiles(): BoardTile[] {
+    let deserts = 0;
+    return this.tiles.reduce<BoardTile[]>((tiles, tile, index) => {
+      if (tile.res === Resource.Desert) {
+        tiles.push({
+          tile,
+          proba: DICE_PROBA[7],
+        });
+        deserts++;
+      } else {
+        tiles.push({
+          tile,
+          numberToken: this.numberTokens[index - deserts],
+          proba: this.proba[index - deserts],
+        });
+      }
+      return tiles;
+    }, []);
   }
 
   hasAdjacentTilesProducingSameResource() {
