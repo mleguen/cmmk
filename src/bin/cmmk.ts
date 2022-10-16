@@ -31,7 +31,7 @@ yargs(process.argv.slice(2))
     .positional('retries', {
       description: __('Retries count (only the most balanced map will be kept)'),
       type: 'number',
-      default: 1,
+      default: 100,
     });
   },
   ({ big, retries, tileSize }) => {

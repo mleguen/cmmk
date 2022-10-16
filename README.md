@@ -26,7 +26,7 @@ Map maker for the Catan board game.
 
 Positionals:
   retries  Retries count (only the most balanced map will be kept)
-                                                           [number] [default: 1]
+                                                         [number] [default: 100]
 
 Options:
   --help          Show help                                            [boolean]
@@ -36,7 +36,7 @@ Options:
 ```
 
 ```bash
-$ cmmk --big --tileSize 5
+$ cmmk --big --tileSize 5 1
 .
                        +----+
                       / (8)  \
@@ -66,7 +66,7 @@ $ cmmk --big --tileSize 5
 ```
 
 ```bash
-$ LANG=fr_FR cmmk 100
+$ LANG=fr_FR cmmk
 ....................................................................................................
                      +-----+
                     /       \
